@@ -34,7 +34,8 @@ This project analyzes a dataset of data analyst job postings to identify:
     AND salary_year_avg IS NOT NULL
     ORDER BY salary_year_avg DESC
     LIMIT 10;
- ```
+- ```
+
 #### Key Insights
 ##### Three highest paying Data Analyst Jobs:
 - 1. Data Analyst	Mantys	650,000
