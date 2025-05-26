@@ -1,4 +1,4 @@
-# Introducton
+# Introduction
 This project analyzes a dataset of data analyst job postings to identify:
 - 🔝 The most in-demand technical skills
 - 💰 The highest average salaries by skill
@@ -34,7 +34,7 @@ This project analyzes a dataset of data analyst job postings to identify:
     AND salary_year_avg IS NOT NULL
     ORDER BY salary_year_avg DESC
     LIMIT 10;
-- ```
+ ```
 #### Key Insights
 ##### Three highest paying Data Analyst Jobs:
 - 1. Data Analyst	Mantys	650,000
@@ -54,7 +54,7 @@ This project analyzes a dataset of data analyst job postings to identify:
 - Even top-paying roles don’t require relocation but these roles likely involve strategic, technical, and cross-functional ownership
 
 ### 🔝 Top 10 Most Common Skills from the Top Data Analyst Roles
--- ``` sql
+``` sql
     WITH top_paying_jobs AS (
         SELECT 
             job_id,
@@ -74,7 +74,7 @@ This project analyzes a dataset of data analyst job postings to identify:
     INNER JOIN skills_job_dim ON top_paying_jobs.job_id = skills_job_dim.job_id
     INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
 ORDER BY salary_year_avg DESC;
-- ```
+ ```
 -- **Skill Frequency***
 ![image](https://github.com/user-attachments/assets/deca5afd-751a-45e7-b060-197557c8e724)
 --  SQL and Python are the most in-demand skills, appearing in nearly every high-paying role. Visualization (Tableau) and statistical tools (R) also rank highly.
