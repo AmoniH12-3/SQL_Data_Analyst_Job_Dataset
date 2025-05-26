@@ -17,6 +17,7 @@ This project analyzes a dataset of data analyst job postings to identify:
 - `skills_dim`: Unique list of skills
 - `skills_job_dim`: Many-to-many join table between jobs and skills
 - `company_dim`: Company details
+  
  ### Top Paying Data Analyst Jobs (Any Location)
 - ```sql
    SELECT 
@@ -33,46 +34,26 @@ This project analyzes a dataset of data analyst job postings to identify:
     AND salary_year_avg IS NOT NULL
     ORDER BY salary_year_avg DESC
     LIMIT 10;
-```
-### Key Insights
-Data Analyst	Mantys	650,000
-Director of Analytics	Meta	336,500
-Associate Director - Data Insights	AT&T	255,829
-Data Analyst, Marketing	Pinterest Ads	232,423
-The Mantys listing is an extreme outlier at $650K — possibly equity-heavy or a founder-type role misclassified as a standard "Data Analyst".
-The next tier ranges from $180K–$330K and includes Director, Principal, and Marketing Analysts — all with senior or leadership slants.
+- ```sql
+#### Key Insights
+##### Three highest paying Data Analyst Jobs:
+- 1. Data Analyst	Mantys	650,000
+- 2. Director of Analytics	Meta	336,500
+- 3. Associate Director - Data Insights	AT&T	255,829
+- The Mantys listing is an extreme outlier at $650K — possibly equity-heavy or a founder-type role misclassified as a standard "Data Analyst".
+- The top 10 highest paying Data Analyst salaries ranged from  $180K–$650K and includes titles like Director, Principal, and Marketing Analysts — all with senior or leadership slants.
+**🔍 Insight:**
+- 6 out of 10 roles include “Director” or “Principal” — seniority strongly correlates with salary.
+- Even plain “Data Analyst” roles (Mantys, Pinterest) can reach high pay when tied to marketing, product, or startup equity.
+ **🌍 All Roles Are Fully Remote ("Anywhere")**
+- Every role listed is labeled as “Anywhere” — signaling high flexibility in remote hiring for top-tier analysts.
+- Companies range from tech giants (Meta) to startups (Mantys, SmartAsset) and public-sector-like orgs (UCLA Health).
+**📌 Key Takeaways**
+- To maximize salary potential, targeting titles like Principal, Director, or Marketing Analyst are the best options
+- Focusing on companies where data plays a core business role are also the best options — like Meta, SmartAsset, or digital-first firms
+- Even top-paying roles don’t require relocation but these roles likely involve strategic, technical, and cross-functional ownership
 
-🧠 Role Titles Indicate Seniority
-Role Tier	Titles Included
-Executive/Director	Director of Analytics, Associate Director, Director (Hybrid)
-Principal	Principal Data Analyst (x3 entries)
-Mid-Senior Analyst	Data Analyst, Data Analyst (Hybrid), Marketing Analyst, ERM Data
-
-🔍 Insight:
-6 out of 10 roles include “Director” or “Principal” — seniority strongly correlates with salary.
-Even plain “Data Analyst” roles (Mantys, Pinterest) can reach high pay when tied to marketing, product, or startup equity.
-
-🌍 All Roles Are Fully Remote ("Anywhere")
-Every role listed is labeled as “Anywhere” — signaling high flexibility in remote hiring for top-tier analysts.
-Companies range from tech giants (Meta) to startups (Mantys, SmartAsset) and public-sector-like orgs (UCLA Health).
-
-🕓 Posting Timeline Insights
-Month Posted	Notable Jobs
-January	Motional, UCLA
-June–August	Meta, AT&T, SmartAsset, Get It Recruit
-Dec	Pinterest, Inclusively
-
-🔍Insight:
-No clear seasonal trend — high-paying jobs were posted year-round.
-Some notable roles were posted in Q4 (Dec) — good to monitor job boards even at year’s end.
-
-📌 Key Takeaways
-
-To maximize salry potential, targeting titles like Principal, Director, or Marketing Analyst are the best options
-Focus on companies where data plays a core business role — like Meta, SmartAsset, or digital-first firms
-✅ Remote is thriving — even top-paying roles don’t require relocation
-
-✅ Expectations are high — these roles likely involve strategic, technical, and cross-functional ownership
+- ### 
 ### 📈 Key Insights
 - ✅ Snowflake, Azure, and AWS combine high demand with excellent salary potential — optimal for modern data workflows.
 - 🧠 Python and Tableau remain the most common tools in remote roles, offering wide applicability.
@@ -85,5 +66,5 @@ Target Data Engineering Roles	Snowflake, AWS, BigQuery, SSIS
 Maximize Remote Job Pay	Azure, Go, Hadoop
 Enterprise Analytics	SAS, SQL Server, Oracle
 ## What I learned
-## Conclusions
+### Conclusions
 - 
