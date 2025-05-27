@@ -1,8 +1,8 @@
 # Introduction
-This project analyzes a dataset of data analyst job postings to identify:
+This project analyzes a 2023 dataset of data analyst job postings to identify:
 - 🔝 The most in-demand technical skills
+- 💰The highest paying Data Analyst roles
 - 💰 The highest average salaries by skill
-- 🌐 Remote-first trends
 - 📈 Recommendations on the most optimal skills to learn for career growth
 # Background
 ## Tools I used
@@ -10,17 +10,26 @@ This project analyzes a dataset of data analyst job postings to identify:
 - **PostgreSQL** — backend database for querying job and skills data
 - **Git + GitHub** — version control and project sharing
 -  ## The Analysis
--  Each query was examined to ubcover jey aspects within the data analyst job market.
+-  Each query was examined to uncover the aspects within the data analyst job market.
 ## 🗂️ Data Schema
 - The project uses four key tables:
 - `job_postings_fact`: Main job data (location, salary, remote status)
 - `skills_dim`: Unique list of skills
 - `skills_job_dim`: Many-to-many join table between jobs and skills
 - `company_dim`: Company details
-  
- ### Top Paying Data Analyst Jobs (Any Location)
-- ```sql
-   SELECT 
+
+## 💰 Top Paying Jobs in Data Analytics (Any Location)
+
+| Role                                 | Company          | Salary (USD) |
+|--------------------------------------|------------------|--------------|
+| Data Analyst                         | Mantys           | $650,000     |
+| Director of Analytics                | Meta             | $336,500     |
+| Associate Director - Data Insights   | AT&T             | $255,829     |
+| Data Analyst, Marketing              | Pinterest        | $232,423     |
+| Principal Data Analyst               | SmartAsset       | $205,000     |
+
+``` sql
+SELECT 
    job_id,
     job_title,
     job_location,
@@ -34,159 +43,142 @@ This project analyzes a dataset of data analyst job postings to identify:
     AND salary_year_avg IS NOT NULL
     ORDER BY salary_year_avg DESC
     LIMIT 10;
-- ```
+```
+### Number of Unique skills required by Top paying Data Analyst jobs (2023)
+![image](https://github.com/user-attachments/assets/95b23648-171c-4962-9b7f-5c72560878f3)
 
-#### Key Insights
-##### Three highest paying Data Analyst Jobs:
-- 1. Data Analyst	Mantys	650,000
-- 2. Director of Analytics	Meta	336,500
-- 3. Associate Director - Data Insights	AT&T	255,829
-- The Mantys listing is an extreme outlier at $650K — possibly equity-heavy or a founder-type role misclassified as a standard "Data Analyst".
-- The top 10 highest paying Data Analyst salaries ranged from  $180K–$650K and includes titles like Director, Principal, and Marketing Analysts — all with senior or leadership slants.
-**🔍 Insight:**
-- 6 out of 10 roles include “Director” or “Principal” — seniority strongly correlates with salary.
-- Even plain “Data Analyst” roles (Mantys, Pinterest) can reach high pay when tied to marketing, product, or startup equity.
- **🌍 All Roles Are Fully Remote ("Anywhere")**
-- Every role listed is labeled as “Anywhere” — signaling high flexibility in remote hiring for top-tier analysts.
-- Companies range from tech giants (Meta) to startups (Mantys, SmartAsset) and public-sector-like orgs (UCLA Health).
-**📌 Key Takeaways**
-- To maximize salary potential, targeting titles like Principal, Director, or Marketing Analyst are the best options
-- Focusing on companies where data plays a core business role are also the best options — like Meta, SmartAsset, or digital-first firms
-- Even top-paying roles don’t require relocation but these roles likely involve strategic, technical, and cross-functional ownership
+### 10 Most Common Skills for the highest paid Data Analyst jobs (2023)
+![image](https://github.com/user-attachments/assets/15507e8b-1841-4e5e-8dd5-baeae9b469de)
 
-### 🔝 Top 10 Most Common Skills from the Top Data Analyst Roles
+### 💡 Insights:
+
+- Seniority significantly boosts pay—**Director-level roles** often exceed **$200K**.
+- Companies like **Meta, AT&T, Pinterest, and SmartAsset** offered competitive compensation for data leadership roles.
+- Even non-director positions can cross the $200K threshold depending on the stack and industry.
+
+## 🔝 Top 5 In-Demand Core Skills (Based on Demand Count for all Data Analyst jobs)
+
+| Skill     | Demand Count |
+|-----------|--------------|
+| SQL       | 198          |
+| Excel     | 128          |
+| Python    | 123          |
+| Tableau   | 109          |
+| R         | 68           |
+
+#### SQL Code: 
 ``` sql
-    WITH top_paying_jobs AS (
-        SELECT 
-            job_id,
-            job_title,
-            salary_year_avg,
-            name AS company_name
-            FROM job_postings_fact
-            LEFT JOIN company_dim ON job_postings_fact.company_id = company_dim.company_id
-            WHERE job_title_short = 'Data Analyst' AND job_location = 'Anywhere'
-            AND salary_year_avg IS NOT NULL
-            ORDER BY salary_year_avg DESC
-            LIMIT 10
-    )
-    SELECT top_paying_jobs.*,
-    skills
-    FROM top_paying_jobs
-    INNER JOIN skills_job_dim ON top_paying_jobs.job_id = skills_job_dim.job_id
+SELECT 
+    skills,
+    COUNT(skills_job_dim.job_id) AS demand_count
+    FROM job_postings_fact AS top_paying_jobs
+INNER JOIN skills_job_dim ON top_paying_jobs.job_id = skills_job_dim.job_id
     INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
-ORDER BY salary_year_avg DESC;
- ```
--- **Skill Frequency***
-![image](https://github.com/user-attachments/assets/deca5afd-751a-45e7-b060-197557c8e724)
---  SQL and Python are the most in-demand skills, appearing in nearly every high-paying role. Visualization (Tableau) and statistical tools (R) also rank highly.
+    WHERE job_title_short = 'Data Analyst'
+    AND job_location = 'New York, NY'
+    AND salary_year_avg > 60000
+    GROUP BY skills
+    ORDER BY demand_count DESC
+    LIMIT 5;
+```
 
---**📊 Jobs with the Most Diverse Skill Requirements**
--- ![image](https://github.com/user-attachments/assets/bf9e9f33-0f9d-46f5-bf1b-646aa0db0189)
--- Insight: Senior-level roles such as Director and Principal Analyst typically demand a wider range of tools and technologies, reflecting their broader responsibilities.
-/*
-- ### Top skills in Demand
-- 
-### 📈 Key Insights
- -- 💼 Top Paying Skills — Niche & Specialized Technologies Dominate
-# 💼 Data Skills & Salary Report (2025)
+### 💡 Insights:
 
-An analysis of the top-paying tech skills based on average salaries, categorized by specialization. This includes niche tools, programming languages, cloud platforms, data science tools, and enterprise workflows.
+- **SQL** remains the most in-demand data skill, required for everything from querying databases to backend analysis.
+- **Excel** continues to be a must-know tool, particularly in roles involving business operations or legacy systems.
+- **Python** is a staple for automation, data manipulation, and analysis.
+- **Tableau** shows high demand for data visualization and dashboarding roles.
+- **R** is useful for statistics-heavy roles and remains a niche but valuable skill
 
----
+## 🛠️ Top-Paying Skills Found in High-Salary Roles
 
-## 💼 Top Paying Skills — Niche & Specialized Technologies Dominate
+![image](https://github.com/user-attachments/assets/48613344-7a09-472f-8520-26192d4af2a5)
 
-| Skill                  | Avg Salary ($) | Insight                                                                                   |
-|------------------------|----------------|--------------------------------------------------------------------------------------------|
-| Neo4j, Elasticsearch   | 185,000        | Graph DBs and search engines—rare but extremely valuable when needed.                     |
-| Cassandra              | 175,000        | Distributed NoSQL DB for high-scale, real-time data applications.                         |
+### 💡 Insights:
 
-> 💡 **Insight:** Niche, high-demand skills in scalable or unstructured data management pay off significantly.
+- **SQL and Python** appear across nearly every high-paying listing.
+- **Cloud platforms** (Azure, AWS, Snowflake) are major salary boosters.
+- Tools like **Pandas, Jupyter, Tableau**, and **Power BI** are expected in modern analyst workflows.
+- **R and Excel** still matter and are well-compensated when combined with modern tools.
 
----
+### 🎯 Optimal Skills to Learn (Based on Demand and Salary):
 
-## 🧰 Programming & Scripting Languages
+| Skill        | Demand Count | Avg Salary ($) |
+|--------------|---------------|----------------|
+| SQL          | 398           | 97,237.16      |
+| Excel        | 256           | 87,288.21      |
+| Python       | 236           | 101,397.22     |
+| Tableau      | 230           | 99,287.65      |
+| R            | 148           | 100,498.77     |
+| Power BI     | 110           | 97,431.30      |
+| SAS          | 63            | 98,902.37      |
+| PowerPoint   | 58            | 88,701.09      |
+| Looker       | 49            | 103,795.30     |
+| Word         | 48            | 82,576.04      |
+| Snowflake    | 37            | 112,947.97     |
+| Oracle       | 37            | 104,533.70     |
+| SQL Server   | 35            | 97,785.73      |
+| Azure        | 34            | 111,225.10     |
+| Google Sheets| 32            | 86,087.79      |
+| AWS          | 32            | 108,317.30     |
+| Flow         | 28            | 97,200.00      |
+| Go           | 27            | 115,319.89     |
+| VBA          | 24            | 88,783.29      |
+| SPSS         | 24            | 92,169.68      |
+| Hadoop       | 22            | 113,192.57     |
+| JavaScript   | 20            | 97,587.00      |
+| Jira         | 20            | 104,917.90     |
+| SharePoint   | 18            | 81,633.58      |
 
-| Language           | Avg Salary ($) |
-|--------------------|----------------|
-| Perl               | 157,000        |
-| C                  | 146,500        |
-| Java               | 125,146        |
-| C++                | 124,044        |
-| Python             | 110,396        |
-| Shell, PowerShell  | ~100K–126K     |
+> 💡 **Tip:** Prioritize high-demand, high-salary tools like **SQL, Python, Tableau, Snowflake, and Azure** to boost both employability and earnings potential.
+> *Excel salaries vary widely depending on role, company, and combination with other tools.
 
-> 💡 **Insight:** More systems-level or backend-oriented languages (like C, Perl, Java) bring higher compensation than Python—likely due to legacy system work or performance-critical infrastructure.
-
----
-
-## ☁️ Cloud and Big Data Tools
-
-| Skill       | Avg Salary ($) |
-|-------------|----------------|
-| GCP         | 135,294        |
-| Azure       | 122,692        |
-| Snowflake   | 119,577        |
-| BigQuery    | 107,438        |
-| AWS         | 106,888        |
-| Databricks  | 103,500        |
-
-> 💡 **Insight:** All part of the modern cloud-based analytics stack. GCP surprisingly edges out AWS and Azure, likely due to a lower supply of GCP-proficient professionals.
-
----
-
-## 📈 Data Science & Visualization Tools
-
-| Tool               | Avg Salary ($) |
-|--------------------|----------------|
-| Scikit-learn       | 130,000        |
-| Pandas, NumPy      | ~125,000       |
-| Jupyter            | 107,562        |
-| Looker, Qlik       | ~110K–120K     |
-| Plotly, Tableau    | ~100K–122K     |
-
-> 💡 **Insight:** Python-based libraries like Scikit-learn and Pandas command strong salaries. Visualization tools are valuable but most lucrative when paired with modeling or engineering skills.
-
----
-
-## 🔐 Enterprise & Workflow Tools
-
-| Skill              | Avg Salary ($) |
-|--------------------|----------------|
-| GDPR               | 117,750        |
-| Git, GitHub        | ~102K–124K     |
-| Jira, Confluence   | ~100K–107K     |
-
-> 💡 **Insight:** Version control and compliance expertise (e.g., GDPR) are increasingly valued, especially in senior or regulatory-facing roles.
-
----
-
-## 🧠 Summary of Takeaways
-
-- 🧠 **Niche tools pay more**: Less common tools like Neo4j, Cassandra, and Elasticsearch dominate the top of the pay scale.
-- ☁️ **Cloud and modern data stacks** (GCP, Snowflake, Airflow) are well-compensated.
-- 📊 **Deep data science skills** (Pandas, Scikit-learn, NumPy) fetch strong salaries, especially when combined with cloud or production tools.
-- 💻 **Low-level programming** (C, Perl) still pays surprisingly well due to legacy system and infrastructure demand.
-
----
-
-📌 _Source: Compiled from industry salary benchmarks and job market insights (2025)._
-
-
---🧠 **Summary of Takeaways**
---🧠 Niche tools pay more: Less common tools like Neo4j, Cassandra, and Elasticsearch dominate the top of the pay scale.
-
---💼 Cloud and modern data stacks (GCP, Snowflake, Airflow) are well-compensated.
-
---🔍 Deep data science skills (Pandas, Scikit-learn, Numpy) fetch strong salaries, especially when combined with cloud or production tools.
-
---🧱 Low-level programming (C, Perl) still pays surprisingly well, likely due to legacy systems or specialized infrastructure needs.
-- ✅ Snowflake, Azure, and AWS combine high demand with excellent salary potential — optimal for modern data workflows.
-- 🧠 Python and Tableau remain the most common tools in remote roles, offering wide applicability.
-- 💼 Niche tools like Go, Hadoop, and BigQuery offer high salaries but appear less frequently.
-
-### Skill Recommendations
+## SQL Code
+``` sql
+WITH skills_demand AS (
+    SELECT 
+        skills_job_dim.skill_id,
+        skills_dim.skills,  -- Get skill name
+        COUNT(*) AS demand_count
+    FROM job_postings_fact AS jpf
+    INNER JOIN skills_job_dim ON jpf.job_id = skills_job_dim.job_id
+    INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+    WHERE jpf.job_title_short = 'Data Analyst'
+      AND jpf.job_work_from_home = TRUE  -- Filter for remote jobs
+      AND jpf.salary_year_avg IS NOT NULL
+    GROUP BY skills_job_dim.skill_id, skills_dim.skills
+),
+avg_salary AS (
+    SELECT
+        skills_job_dim.skill_id,
+        ROUND(AVG(jpf.salary_year_avg), 2) AS avg_salary
+    FROM job_postings_fact AS jpf
+    INNER JOIN skills_job_dim ON jpf.job_id = skills_job_dim.job_id
+    WHERE jpf.job_title_short = 'Data Analyst'
+      AND jpf.job_work_from_home = TRUE
+      AND jpf.salary_year_avg IS NOT NULL
+    GROUP BY skills_job_dim.skill_id
+)
+SELECT
+    sd.skill_id,
+    sd.skills,
+    sd.demand_count,
+    avg_salary.avg_salary
+FROM skills_demand sd
+JOIN avg_salary ON sd.skill_id = avg_salary.skill_id
+WHERE demand_count > 10  -- Filter for skills with significant demand
+ORDER BY demand_count DESC
+LIMIT 25;
+```
 
 ## What I learned
+- **SQL + Python + Tableau + Excel** = the golden combo for job opportunities and competitive salaries.
+- Cloud and big data skills (e.g., **Snowflake, Azure, AWS**) are in high demand for senior roles.
+- **Director** and **Principal Analyst** roles commonly pay above **$200K** and require both technical depth and business communication.
 ### Conclusions
-- 
+- The data makes it clear: success in data analytics hinges on both foundational skills and alignment with industry demand.
+- **SQL, Python, Excel, and Tableau** form the bedrock of a strong data analytics toolkit—highly demanded across entry-level to director-level roles.
+- Cloud tools like **Snowflake, AWS, Azure**, and **BigQuery** are becoming essential, especially for mid-to-senior-level analysts working in data infrastructure and enterprise environments.
+- High-paying roles are not limited to FAANG companies—organizations like **SmartAsset, AT&T, and Pinterest** are offering salaries exceeding **$200K** for analysts with a modern, production-ready skill set.
+- **Specialized tools** like R, Pandas, Jupyter, and Databricks retain value when paired with strong business acumen or statistical modeling.
+
